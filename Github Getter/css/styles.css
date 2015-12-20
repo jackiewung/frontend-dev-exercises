@@ -25,6 +25,11 @@ b {
   margin-left: 5px;
 }
 
+i {
+  font-family: centuryschool;
+  font-weight: 100;
+}
+
 a {
   font-family: franklin;
   color: #333;
@@ -76,7 +81,8 @@ button:hover {
 
 .main-button {
   border: none;
-  background: white;
+  background: #ccc;
+  color: #fff;
   width: inherit;
   padding: 5px 15px 5px 15px;
   text-ransform: uppercase;
@@ -132,7 +138,8 @@ button:hover {
 .recently-searched-list {
   background: rgba(255,255,255,0.3);
   width: 70%;
-  height: inherit;
+  max-height: 260px;
+  overflow: scroll;
   padding: 10px;
   margin: 0 auto;
   font-size: 90%;
@@ -140,8 +147,25 @@ button:hover {
 
 .recently-searched-item {
   cursor: pointer;
+  display: inline-block;
   font-size: 95%;
-  padding: 3px;
+  margin: 5px;
+}
+
+.recently-searched-item:after {
+  content: '';
+  display: block;
+  margin: auto;
+  height: 0.5px;
+  width: 15px;
+  background: transparent;
+  transition: width .2s ease, background-color .5s ease;
+}
+
+.recently-searched-item:hover:after {
+  width: 100%;
+  height: 0.5px;
+  background: #333;
 }
 
 .results-go-back {
@@ -151,5 +175,12 @@ button:hover {
   float: left;
   padding: 15px;
   cursor: pointer;
+  display: none;
+}
+
+.now-searching {
+  margin: 5%;
+  padding-right: 5px;
+  font-size: 90%;
   display: none;
 }

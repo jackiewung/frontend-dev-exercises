@@ -3,21 +3,22 @@ $(function() {
   //handles submit on form by adding to recently searched and calling github API
   $(document).on("submit", "form", function(e) {
     e.preventDefault();
-    console.log("keying")
 
     var query = $(this).find("#search").val();
 
     //handles recently searched
     if(recentlySearched && recentlySearched.length > 0) {
-      recentlySearched.push(query);
-      localStorage.setItem("recently", JSON.stringify(recentlySearched));
-      var recentlyStoredView = [];
+      if(recentlySearched.indexOf(query) === -1) {
+        recentlySearched.push(query);
+        localStorage.setItem("recently", JSON.stringify(recentlySearched));
+        var recentlyStoredView = [];
 
-      recentlySearched.map(function(item) {
-        recentlyStoredView.push("<div class=recently-searched-item>" + item + "</div>");
-      })
+        recentlySearched.map(function(item) {
+          recentlyStoredView.push("<div class=recently-searched-item>" + item + "</div>");
+        })
 
-      $(".recently-searched-list").html(recentlyStoredView);
+        $(".recently-searched-list").html(recentlyStoredView);
+      };
     } else {
       var startNewRecent = [query];
       localStorage.setItem("recently", JSON.stringify(startNewRecent));
@@ -31,6 +32,7 @@ $(function() {
 
   //handles github search
   function githubSearch (input) {
+    $("#search").val("");
     var checkLocal = JSON.parse(localStorage.getItem(input));
 
     if(checkLocal) {
@@ -48,6 +50,9 @@ $(function() {
         loadLocalStorage(JSON.parse(localStorage.getItem(input)));
       })
     }
+
+    $("#overlay-container").html("<div class=now-searching>searching for..." + "  <i>" + input + "</i></div>");
+    $(".now-searching").css({ "display": "block" });
   };
 
   //uses local storage information to map and display all of the results from the query
@@ -70,9 +75,8 @@ $(function() {
       repoBasicInfo.push(repoView);
       repoStorage.push(item);
     });
-
-    $(".results-columns").html(repoBasicInfo);
     $("#results-container").css({ "display": "block" });
+    $("#results-container").html(repoBasicInfo);
     $(".divider-content-right").css({ "display": "none" });
     $(".results-go-back").css({ "display": "block" });
     showRepoInfo(repoStorage);
@@ -107,7 +111,7 @@ $(function() {
   if(recentlySearched && recentlySearched.length > 0) {
     var recentlyStored = [];
     recentlySearched.map(function(item) {
-      recentlyStored.push("<div class=recently-searched-item>" + item + "</div>");
+      recentlyStored.push("<div class=recently-searched-item>" + item + "</div><BR>");
     })
     $(".recently-searched-list").html(recentlyStored);
   };
@@ -123,6 +127,7 @@ $(function() {
     $("#results-container").css({ "display": "none" });
     $(".divider-content-right").css({ "display": "block" });
     $(".results-go-back").css({ "display": "none" });
+    $(".now-searching").css({ "display": "none" });
   });
 
 });
