@@ -16,15 +16,35 @@
 <body>
   <div class="main-container">
 
-    <!-- Github Search !-->
-    <form class="main-form">
-      <div class="main-title">Search Github Repositories</div>
-      <input id="search" type="text"/>
-      <button class="main-button">Search</button>
-    </form>
+    <!-- left divider !-->
+    <div id="divider-left">
+      <div class="divider-content-left">
 
-    <div id="results-container"></div>
-    <div id="overlay-container"></div>
+        <!-- Github Search !-->
+        <form class="main-form">
+          <div class="main-title">Search Repositories</div>
+          <input id="search" type="text"/>
+          <button class="main-button">Search</button>
+        </form>
+
+        <div id="overlay-container"></div>
+
+      </div>
+    </div>
+
+    <!-- right divider !-->
+    <div id="divider-right">
+      <div class="results-go-back">← Back</div>
+      <div class="divider-content-right">
+
+        <div class="main-title">Recently Searched</div>
+        <div class="recently-searched-list">start searching!</div>
+
+      </div>
+      <div id="results-container">
+        <div class="results-columns"></div>
+      </div>
+    </div>
 
   </div>
 </body>
