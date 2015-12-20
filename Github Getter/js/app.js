@@ -1,37 +1,33 @@
-/*
-    # Endpoint URL #
+function loadData (itemStorage) {
+  var repoStorage = [];
+  itemStorage.map(function(item) {
+    var repoView = "<h1>" + item.name + "</h1><BR>" + item.owner;
+    repoStorage.push(repoView);
+  })
+  $("#results-container").html(repoStorage);
+};
 
-    https://api.github.com/legacy/repos/search/{query}
+$(function() {
 
-    Note: Github imposes a rate limit of 60 request per minute. Documentation can be found at http://developer.github.com/v3/.
+  $(document).on("submit", "form", function(e) {
+    e.preventDefault();
 
-    # Example Response JSON #
+    var query = $(this).find("#search").val();
+    var checkLocal = JSON.parse(localStorage.getItem(query));
 
-    {
-      "meta": {...},
-      "data": {
-        "repositories": [
-          {
-            "type": string,
-            "watchers": number,
-            "followers": number,
-            "username": string,
-            "owner": string,
-            "created": string,
-            "created_at": string,
-            "pushed_at": string,
-            "description": string,
-            "forks": number,
-            "pushed": string,
-            "fork": boolean,
-            "size": number,
-            "name": string,
-            "private": boolean,
-            "language": number
-          },
-          {...},
-          {...}
-        ]
-      }
+    if(checkLocal) {
+      console.log("inside", checkLocal)
+      loadData(checkLocal);
+    } else {
+       $.ajax({
+        url: "https://api.github.com/legacy/repos/search/" + query,
+        dataType: "json"
+      }).done(function(data) {
+        var repos = data.repositories;
+        localStorage.setItem(query, JSON.stringify(repos));
+        loadData(JSON.parse(localStorage.getItem(query)));
+      });
     }
-*/
+  })
+
+});
