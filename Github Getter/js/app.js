@@ -43,32 +43,38 @@ $(function() {
         dataType: "json",
         beforeSend: function() {
           var thinking = "Thinking";
+          var time = 0;
 
-          $(".divider-content-right").css({ "display": "none" });
           $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
 
           thinkingCap = setInterval(function() {
+            if(time > 1500) {
+              clearInterval(thinkingCap);
+              $("#results-container").html("<div class=thinking-cap>please try again!</div>")
+              return;
+            }
+
+            time += 250;
+
             thinking = thinking += ".";
             $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
           },250);
+
         }
       }).done(function(data) {
-        clearInterval(thinkingCap);
         var repoSearch = data.repositories;
         localStorage.setItem(input, JSON.stringify(repoSearch));
-        loadLocalStorage(JSON.parse(localStorage.getItem(input)));
-        console.log("done")
+        loadLocalStorage(JSON.parse(localStorage.getItem(input)), thinkingCap);
       })
-    }
+    };
 
     $("#overlay-container").html("<div class=now-searching>searching for..." + "  <i>" + input + "</i></div>");
     $(".divider-content-right").css({ "display": "none" });
     $(".now-searching").css({ "display": "block" });
-
   };
 
   //uses local storage information to map and display all of the results from the query
-  function loadLocalStorage (itemStorage) {
+  function loadLocalStorage (itemStorage, interval) {
     var repoBasicInfo = [];
     var repoStorage = [];
 
@@ -82,12 +88,13 @@ $(function() {
 
       if(index % 2 === 0) {
         repoView = "<div class=even-index>" + repoView + "</div>";
-      }
+      };
 
       repoBasicInfo.push(repoView);
       repoStorage.push(item);
     });
 
+    clearInterval(interval);
     $("#results-container").html(repoBasicInfo);
     $("#results-container").css({ "display": "block" });
     $(".results-go-back").css({ "display": "block" });

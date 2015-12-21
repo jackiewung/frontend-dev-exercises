@@ -154,8 +154,8 @@ button:hover {
 .recently-searched-item {
   cursor: pointer;
   display: inline-block;
-  font-size: 95%;
   margin: 5px;
+  font-size: 95%;
 }
 
 .recently-searched-item:after {
@@ -199,7 +199,8 @@ button:hover {
 .recently-searched-list .clear-searched {
   cursor: pointer;
   float: right;
-  display: inline;
+  position: absolute;
+  display: block;
   color: rgba(0,0,0,0.2);
 }
 
