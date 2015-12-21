@@ -4,14 +4,15 @@ $(function() {
   $(document).on("submit", "form", function(e) {
     e.preventDefault();
 
+    var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
     var query = $(this).find("#search").val();
 
     //handles recently searched
     if(recentlySearched && recentlySearched.length > 0) {
       if(recentlySearched.indexOf(query) === -1) {
+        var recentlyStoredView = [];
         recentlySearched.push(query);
         localStorage.setItem("recently", JSON.stringify(recentlySearched));
-        var recentlyStoredView = [];
 
         recentlySearched.map(function(item) {
           recentlyStoredView.push("<div class=recently-searched-item>" + item + "</div>");
@@ -20,11 +21,12 @@ $(function() {
         $(".recently-searched-itemlist").html(recentlyStoredView);
       };
     } else {
+      //if there is no recently searched, on first search it creates it in local storage
       var startNewRecent = [query];
       localStorage.setItem("recently", JSON.stringify(startNewRecent));
       recentlyStorage = JSON.parse(localStorage.getItem("recently"));
 
-      $(".recently-searched-itemlist").html(recentlyStorage);
+      $(".recently-searched-itemlist").html("<div class=recently-searched-item>" + recentlyStorage + "</div>");
     }
 
     githubSearch(query);
@@ -35,6 +37,7 @@ $(function() {
     $("#search").val("");
     var checkLocal = JSON.parse(localStorage.getItem(input));
 
+    //checkLocal pulls from local storage if the search has been made before
     if(checkLocal) {
       loadLocalStorage(checkLocal);
     } else {
@@ -50,7 +53,8 @@ $(function() {
           thinkingCap = setInterval(function() {
             if(time > 1500) {
               clearInterval(thinkingCap);
-              $("#results-container").html("<div class=thinking-cap>please try again!</div>")
+              $("#results-container").html("<div class=thinking-cap>please try again!</div>");
+              $(".results-go-back").css({ "display": "block" });
               return;
             }
 
@@ -62,8 +66,7 @@ $(function() {
 
         }
       }).done(function(data) {
-        var repoSearch = data.repositories;
-        localStorage.setItem(input, JSON.stringify(repoSearch));
+        localStorage.setItem(input, JSON.stringify(data.repositories));
         loadLocalStorage(JSON.parse(localStorage.getItem(input)), thinkingCap);
       })
     };
@@ -75,6 +78,7 @@ $(function() {
 
   //uses local storage information to map and display all of the results from the query
   function loadLocalStorage (itemStorage, interval) {
+    //repoStorage is the entire data while repoBasicInfo holds the html of title and user
     var repoBasicInfo = [];
     var repoStorage = [];
 
@@ -86,6 +90,7 @@ $(function() {
             + item.owner +
         "</div></div>";
 
+      //every other result has a different background color added to it
       if(index % 2 === 0) {
         repoView = "<div class=even-index>" + repoView + "</div>";
       };
@@ -107,6 +112,7 @@ $(function() {
       var index = $(this).index();
       var repoInfo = data[index];
 
+      //checks if language exists, if it doesn't have a filler
       if(repoInfo.language.length < 1) {
         repoInfo.language = "no language :(";
       };
@@ -116,6 +122,7 @@ $(function() {
         "     <B>LANGUAGE</B>: " + repoInfo.language + "<BR><div class=repo-info>"
         + repoInfo.description + "</div></div>";
 
+      //toggles description view on and off by checking to see if the parent has the child repo-description
       if($(this).has(".repo-description").length) {
         $(this).children(".repo-description").remove();
       } else {
@@ -125,12 +132,12 @@ $(function() {
   };
 
   //checks if recently searched already exists on page enter so it knows to render if it does
-  var recentlySearched = JSON.parse(localStorage.getItem("recently"));
+  var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
 
   if(recentlySearched && recentlySearched.length > 0) {
     var recentlyStored = [];
     recentlySearched.map(function(item) {
-      recentlyStored.push("<div class=recently-searched-item>" + item + "</div><BR>");
+      recentlyStored.push("<div class=recently-searched-item>" + item + "</div>");
     })
     $(".recently-searched-itemlist").html(recentlyStored);
   };
@@ -145,13 +152,14 @@ $(function() {
   $(".results-go-back").on("click", function() {
     $("#results-container").css({ "display": "none" });
     $(".divider-content-right").css({ "display": "block" });
+    $(".recently-searched-list").css({ "display": "block" });
     $(".results-go-back").css({ "display": "none" });
     $(".now-searching").css({ "display": "none" });
   });
 
   //clears storage on clicking "x" in recently searched
   $(".recently-searched-list .clear-searched").on("click", function() {
-    localStorage.clear();
+    localStorage.removeItem('recently');
     $(".recently-searched-itemlist").html("history is cleared! start searching :)");
   });
 
