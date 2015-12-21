@@ -8,8 +8,10 @@ $(function() {
     var query = $(this).find("#search").val();
 
     //handles error if there's no input
-    if(query.length < 1) {
-      $(".main-form").after("<div class=error>Oops! Please write an input</div>");
+    if(query.length === 0) {
+      if(!$(".error").is(":visible")) {
+        $(".main-form").after("<div class=error>Oops! Please write an input</div>");
+      }
       return;
     }
 
