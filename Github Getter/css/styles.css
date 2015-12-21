@@ -9,6 +9,11 @@
   src: url(century-school.otf);
 }
 
+@font-face {
+  font-family: centuryschool-i;
+  src: url(century-school-i.otf);
+}
+
 * {
   font-family: franklin;
 }
@@ -26,7 +31,7 @@ b {
 }
 
 i {
-  font-family: centuryschool;
+  font-family: centuryschool-i;
   font-weight: 100;
 }
 
@@ -68,7 +73,7 @@ button:hover {
 }
 
 #search {
-  border: none;
+  border: 1px solid #333;
   width: 40%;
   padding: 5px;
   font-size: 85%;
