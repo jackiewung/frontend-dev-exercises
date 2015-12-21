@@ -1,10 +1,9 @@
 $(function() {
 
-  //handles submit on form by adding to recently searched and calling github API
+  //handles submit on form by adding to recently searched and calls github API
   $(document).on("submit", "form", function(e) {
     e.preventDefault();
 
-    var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
     var query = $(this).find("#search").val();
 
     //handles error if there's no input
@@ -16,15 +15,18 @@ $(function() {
     }
 
     //handles recently searched
+    var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
+
     if(recentlySearched && recentlySearched.length > 0) {
       if(recentlySearched.indexOf(query) === -1) {
-        var recentlyStoredView = [];
         recentlySearched.push(query);
         localStorage.setItem("recently", JSON.stringify(recentlySearched));
 
+        var recentlyStoredView = [];
+
         recentlySearched.map(function(item) {
           recentlyStoredView.push("<div class=recently-searched-item>" + item + "</div>");
-        })
+        });
 
         $(".recently-searched-itemlist").html(recentlyStoredView);
       };
@@ -32,8 +34,8 @@ $(function() {
       //if there is no recently searched, on first search it creates it in local storage
       var startNewRecent = [query];
       localStorage.setItem("recently", JSON.stringify(startNewRecent));
-      recentlyStorage = JSON.parse(localStorage.getItem("recently"));
 
+      recentlyStorage = JSON.parse(localStorage.getItem("recently"));
       $(".recently-searched-itemlist").html("<div class=recently-searched-item>" + recentlyStorage + "</div>");
     }
 
@@ -43,11 +45,16 @@ $(function() {
   //handles github search
   function githubSearch (input) {
     $("#search").val("");
+
     var checkLocal = JSON.parse(localStorage.getItem(input));
 
     //checkLocal pulls from local storage if the search has been made before
     if(checkLocal) {
-      loadLocalStorage(checkLocal);
+      if(checkLocal.length) {
+        loadLocalStorage(checkLocal);
+      } else {
+        noResults();
+      }
     } else {
        $.ajax({
         url: "https://api.github.com/legacy/repos/search/" + input,
@@ -59,32 +66,32 @@ $(function() {
           $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
 
           thinkingCap = setInterval(function() {
-            if(time > 1500) {
+            if(time > 1200) {
               clearInterval(thinkingCap);
               $("#results-container").html("<div class=thinking-cap>please try again!</div>");
               $(".results-go-back").css({ "display": "block" });
               return;
             } else {
-              time += 250;
+              time += 200;
             }
+
             thinking = thinking += ".";
             $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
-          },250);
-
+          },200);
         }
       }).done(function(data) {
         clearInterval(thinkingCap);
         localStorage.setItem(input, JSON.stringify(data.repositories));
+
         if(data.repositories.length > 0) {
           loadLocalStorage(JSON.parse(localStorage.getItem(input)));
         } else {
-          $("#results-container").css({ "display": "block" });
-          $("#results-container").html("<div class=thinking-cap>No Results</div>");
-          $(".results-go-back").css({ "display": "block" });
+          noResults();
         }
       })
     };
 
+    //attaches a now searching text on the left panel
     $("#overlay-container").html("<div class=now-searching>searching for..." + "  <i>" + input.toUpperCase() + "</i></div>");
     $(".divider-content-right").css({ "display": "none" });
     $(".now-searching").css({ "display": "block" });
@@ -143,6 +150,13 @@ $(function() {
     })
   };
 
+  //displays no results
+  function noResults() {
+    $("#results-container").css({ "display": "block" });
+    $("#results-container").html("<div class=thinking-cap>No Results</div>");
+    $(".results-go-back").css({ "display": "block" });
+  };
+
   //checks if recently searched already exists on page enter so it knows to render if it does
   var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
 
@@ -181,6 +195,6 @@ $(function() {
     if(searchVal.length) {
       $(".error").hide();
     }
-  })
+  });
 
 });
