@@ -78,7 +78,7 @@ $(function() {
       })
     };
 
-    $("#overlay-container").html("<div class=now-searching>searching for..." + "  <i>" + input + "</i></div>");
+    $("#overlay-container").html("<div class=now-searching>searching for..." + "  <i>" + input.toUpperCase() + "</i></div>");
     $(".divider-content-right").css({ "display": "none" });
     $(".now-searching").css({ "display": "block" });
   };
