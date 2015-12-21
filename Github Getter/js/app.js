@@ -7,6 +7,12 @@ $(function() {
     var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
     var query = $(this).find("#search").val();
 
+    //handles error if there's no input
+    if(query.length < 1) {
+      $(".main-form").after("<div class=error>Oops! Please write an input</div>");
+      return;
+    }
+
     //handles recently searched
     if(recentlySearched && recentlySearched.length > 0) {
       if(recentlySearched.indexOf(query) === -1) {
@@ -56,10 +62,9 @@ $(function() {
               $("#results-container").html("<div class=thinking-cap>please try again!</div>");
               $(".results-go-back").css({ "display": "block" });
               return;
+            } else {
+              time += 250;
             }
-
-            time += 250;
-
             thinking = thinking += ".";
             $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
           },250);
@@ -117,9 +122,8 @@ $(function() {
         repoInfo.language = "no language :(";
       };
 
-      var showRepoInfo =
-      "<div class=repo-description><a href=" + repoInfo.url + "><button class=repo-button> GITHUB REPO → </button></a><BR><B>FOLLOWERS</B>: " + repoInfo.followers +
-        "     <B>LANGUAGE</B>: " + repoInfo.language + "<BR><div class=repo-info>"
+      var showRepoInfo = "<div class=repo-description><a href=" + repoInfo.url + "><button class=repo-button> GITHUB REPO → </button></a><BR><B>FOLLOWERS</B>: " + repoInfo.followers +
+        " <B>LANGUAGE</B>: " + repoInfo.language + "<BR><div class=repo-info>"
         + repoInfo.description + "</div></div>";
 
       //toggles description view on and off by checking to see if the parent has the child repo-description
@@ -162,5 +166,13 @@ $(function() {
     localStorage.removeItem('recently');
     $(".recently-searched-itemlist").html("history is cleared! start searching :)");
   });
+
+  //removes error message on key change
+  $("#search").on("change", function() {
+    var searchVal = $("#search").val();
+    if(searchVal.length) {
+      $(".error").hide();
+    }
+  })
 
 });

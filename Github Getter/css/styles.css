@@ -55,10 +55,6 @@ button:hover {
   overflow: scroll;
 }
 
-#divider-left:hover {
-
-}
-
 #divider-right {
   background: #f5e3e7;
   position: absolute;
@@ -82,7 +78,7 @@ button:hover {
   font-family: centuryschool;
   font-size: 190%;
   letter-spacing: 0.02em;
-  margin: 2%;
+  margin: 3%;
 }
 
 .main-button {
@@ -183,7 +179,7 @@ button:hover {
 }
 
 .now-searching {
-  margin: 5%;
+  margin: 3%;
   padding-right: 5px;
   font-size: 90%;
   display: none;
@@ -205,4 +201,11 @@ button:hover {
   font-size: 180%;
   font-family: centuryschool;
   margin: 18% 3% 5% 3%;
+}
+
+.error {
+  color: #8d2330;
+  font-family: centuryschool;
+  font-size: 85%;
+  margin: 3%;
 }
