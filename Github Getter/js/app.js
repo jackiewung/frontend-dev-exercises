@@ -137,7 +137,7 @@ $(function() {
         repoInfo.language = "no language :(";
       };
 
-      var showRepoInfo = "<div class=repo-description><a href=" + repoInfo.url + "><button class=repo-button> GITHUB REPO → </button></a><BR><B>FOLLOWERS</B>: " + repoInfo.followers +
+      var showRepoInfo = "<div class=repo-description><a href=" + repoInfo.url + " target=_blank><button class=repo-button> GITHUB REPO → </button></a><BR><B>FOLLOWERS</B>: " + repoInfo.followers +
         " <B>LANGUAGE</B>: " + repoInfo.language + "<BR><div class=repo-info>"
         + repoInfo.description + "</div></div>";
 
@@ -151,7 +151,7 @@ $(function() {
   };
 
   //displays no results
-  function noResults() {
+  function noResults () {
     $("#results-container").css({ "display": "block" });
     $("#results-container").html("<div class=thinking-cap>No Results</div>");
     $(".results-go-back").css({ "display": "block" });
@@ -162,9 +162,11 @@ $(function() {
 
   if(recentlySearched && recentlySearched.length > 0) {
     var recentlyStored = [];
+
     recentlySearched.map(function(item) {
       recentlyStored.push("<div class=recently-searched-item>" + item + "</div>");
-    })
+    });
+
     $(".recently-searched-itemlist").html(recentlyStored);
   };
 
@@ -192,6 +194,7 @@ $(function() {
   //removes error message on key change
   $("#search").on("change", function() {
     var searchVal = $("#search").val();
+
     if(searchVal.length) {
       $(".error").hide();
     }
