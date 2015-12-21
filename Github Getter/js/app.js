@@ -73,8 +73,15 @@ $(function() {
 
         }
       }).done(function(data) {
+        clearInterval(thinkingCap);
         localStorage.setItem(input, JSON.stringify(data.repositories));
-        loadLocalStorage(JSON.parse(localStorage.getItem(input)), thinkingCap);
+        if(data.repositories.length > 0) {
+          loadLocalStorage(JSON.parse(localStorage.getItem(input)));
+        } else {
+          $("#results-container").css({ "display": "block" });
+          $("#results-container").html("<div class=thinking-cap>No Results</div>");
+          $(".results-go-back").css({ "display": "block" });
+        }
       })
     };
 
@@ -84,7 +91,7 @@ $(function() {
   };
 
   //uses local storage information to map and display all of the results from the query
-  function loadLocalStorage (itemStorage, interval) {
+  function loadLocalStorage (itemStorage) {
     //repoStorage is the entire data while repoBasicInfo holds the html of title and user
     var repoBasicInfo = [];
     var repoStorage = [];
@@ -106,7 +113,6 @@ $(function() {
       repoStorage.push(item);
     });
 
-    clearInterval(interval);
     $("#results-container").html(repoBasicInfo);
     $("#results-container").css({ "display": "block" });
     $(".results-go-back").css({ "display": "block" });
