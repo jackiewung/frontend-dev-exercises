@@ -17,14 +17,14 @@ $(function() {
           recentlyStoredView.push("<div class=recently-searched-item>" + item + "</div>");
         })
 
-        $(".recently-searched-list").html(recentlyStoredView);
+        $(".recently-searched-itemlist").html(recentlyStoredView);
       };
     } else {
       var startNewRecent = [query];
       localStorage.setItem("recently", JSON.stringify(startNewRecent));
       recentlyStorage = JSON.parse(localStorage.getItem("recently"));
 
-      $(".recently-searched-list").html(recentlyStorage);
+      $(".recently-searched-itemlist").html(recentlyStorage);
     }
 
     githubSearch(query);
@@ -42,17 +42,29 @@ $(function() {
         url: "https://api.github.com/legacy/repos/search/" + input,
         dataType: "json",
         beforeSend: function() {
-          $("#results-container").html("loading!");
+          var thinking = "Thinking";
+
+          $(".divider-content-right").css({ "display": "none" });
+          $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
+
+          thinkingCap = setInterval(function() {
+            thinking = thinking += ".";
+            $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
+          },250);
         }
       }).done(function(data) {
+        clearInterval(thinkingCap);
         var repoSearch = data.repositories;
         localStorage.setItem(input, JSON.stringify(repoSearch));
         loadLocalStorage(JSON.parse(localStorage.getItem(input)));
+        console.log("done")
       })
     }
 
     $("#overlay-container").html("<div class=now-searching>searching for..." + "  <i>" + input + "</i></div>");
+    $(".divider-content-right").css({ "display": "none" });
     $(".now-searching").css({ "display": "block" });
+
   };
 
   //uses local storage information to map and display all of the results from the query
@@ -75,9 +87,9 @@ $(function() {
       repoBasicInfo.push(repoView);
       repoStorage.push(item);
     });
-    $("#results-container").css({ "display": "block" });
+
     $("#results-container").html(repoBasicInfo);
-    $(".divider-content-right").css({ "display": "none" });
+    $("#results-container").css({ "display": "block" });
     $(".results-go-back").css({ "display": "block" });
     showRepoInfo(repoStorage);
   };
@@ -89,8 +101,8 @@ $(function() {
       var repoInfo = data[index];
 
       if(repoInfo.language.length < 1) {
-        repoInfo.language = "no language :("
-      }
+        repoInfo.language = "no language :(";
+      };
 
       var showRepoInfo =
       "<div class=repo-description><a href=" + repoInfo.url + "><button class=repo-button> GITHUB REPO → </button></a><BR><B>FOLLOWERS</B>: " + repoInfo.followers +
@@ -105,7 +117,7 @@ $(function() {
     })
   };
 
-  //checks if recently searched already exists so it knows to render if it does
+  //checks if recently searched already exists on page enter so it knows to render if it does
   var recentlySearched = JSON.parse(localStorage.getItem("recently"));
 
   if(recentlySearched && recentlySearched.length > 0) {
@@ -113,11 +125,11 @@ $(function() {
     recentlySearched.map(function(item) {
       recentlyStored.push("<div class=recently-searched-item>" + item + "</div><BR>");
     })
-    $(".recently-searched-list").html(recentlyStored);
+    $(".recently-searched-itemlist").html(recentlyStored);
   };
 
   //delegates a listener on each recently searched item, if clicked then search github
-  $(".recently-searched-list").on("click", ".recently-searched-item", function() {
+  $(".recently-searched-itemlist").on("click", ".recently-searched-item", function() {
     var clickedItem = $(this).context.innerHTML;
     githubSearch(clickedItem);
   });
@@ -128,6 +140,12 @@ $(function() {
     $(".divider-content-right").css({ "display": "block" });
     $(".results-go-back").css({ "display": "none" });
     $(".now-searching").css({ "display": "none" });
+  });
+
+  //clears storage on clicking "x" in recently searched
+  $(".recently-searched-list .clear-searched").on("click", function() {
+    localStorage.clear();
+    $(".recently-searched-itemlist").html("history is cleared! start searching :)");
   });
 
 });

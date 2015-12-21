@@ -81,7 +81,7 @@ button:hover {
 
 .main-button {
   border: none;
-  background: #ccc;
+  background: #999;
   color: #fff;
   width: inherit;
   padding: 5px 15px 5px 15px;
@@ -100,6 +100,12 @@ button:hover {
 .repo-box {
   cursor: pointer;
   padding: 15px;
+}
+
+.repo-box:hover {
+  background: rgba(255,255,255, 0.8);
+  transition: all 1.0s ease;
+  padding: -5px;
 }
 
 .even-index {
@@ -178,9 +184,31 @@ button:hover {
   display: none;
 }
 
+.results-go-back:hover {
+  background: rgba(255,255,255, 0.8);
+  transition: all .2s ease;
+}
+
 .now-searching {
   margin: 5%;
   padding-right: 5px;
   font-size: 90%;
   display: none;
+}
+
+.recently-searched-list .clear-searched {
+  cursor: pointer;
+  float: right;
+  display: inline;
+  color: rgba(0,0,0,0.2);
+}
+
+.recently-searched-list .clear-searched:hover {
+  color: rgba(0,0,0,0.4);
+}
+
+.thinking-cap {
+  font-size: 180%;
+  font-family: centuryschool;
+  margin: 18% 3% 5% 3%;
 }
