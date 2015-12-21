@@ -208,11 +208,6 @@ $(function() {
   $(".recently-searched-list .clear-searched").on("click", function() {
     localStorage.removeItem('recently');
 
-    if($(".recently-searched-itemlist").hasClass("slide-up")) {
-      $(".recently-searched-itemlist").removeClass("slide-up");
-    }
-
-    $(".recently-searched-itemlist").addClass("slide-up");
     $(".recently-searched-itemlist").html("history is cleared! start searching :)");
   });
 
