@@ -68,14 +68,17 @@ $(function() {
           thinkingCap = setInterval(function() {
             if(time > 1200) {
               clearInterval(thinkingCap);
+
               $("#results-container").html("<div class=thinking-cap>please try again!</div>");
               $(".results-go-back").css({ "display": "block" });
+
               return;
             } else {
               time += 200;
             }
 
             thinking = thinking += ".";
+
             $("#results-container").html("<div class=thinking-cap>" + thinking + "</div>");
           },200);
         }
@@ -120,9 +123,16 @@ $(function() {
       repoStorage.push(item);
     });
 
+    if($("#results-container").hasClass("slide-right")) {
+      $("#results-container").removeClass("slide-right");
+    }
+
+    $("#results-container").addClass("slide-right");
     $("#results-container").html(repoBasicInfo);
+
     $("#results-container").css({ "display": "block" });
     $(".results-go-back").css({ "display": "block" });
+
     showRepoInfo(repoStorage);
   };
 
@@ -144,7 +154,9 @@ $(function() {
       //toggles description view on and off by checking to see if the parent has the child repo-description
       if($(this).has(".repo-description").length) {
         $(this).children(".repo-description").remove();
+        $(this).toggleClass("slide-down");
       } else {
+        $(this).toggleClass("slide-down");
         $(this).append(showRepoInfo);
       }
     })
@@ -158,7 +170,7 @@ $(function() {
   };
 
   //checks if recently searched already exists on page enter so it knows to render if it does
-  var recentlySearched = JSON.parse(localStorage.getItem("recently") || '[]');
+  var recentlySearched = JSON.parse(localStorage.getItem("recently") || "[]");
 
   if(recentlySearched && recentlySearched.length > 0) {
     var recentlyStored = [];
@@ -179,15 +191,28 @@ $(function() {
   //back button toggles the view of results and recently searched
   $(".results-go-back").on("click", function() {
     $("#results-container").css({ "display": "none" });
-    $(".divider-content-right").css({ "display": "block" });
-    $(".recently-searched-list").css({ "display": "block" });
     $(".results-go-back").css({ "display": "none" });
     $(".now-searching").css({ "display": "none" });
+
+    $(".divider-content-right").css({ "display": "block" });
+    $(".recently-searched-list").css({ "display": "block" });
+
+    if($(".divider-content-right").hasClass("slide-right")) {
+      $(".divider-content-right").removeClass("slide-right");
+    }
+
+    $(".divider-content-right").addClass("slide-right");
   });
 
   //clears storage on clicking "x" in recently searched
   $(".recently-searched-list .clear-searched").on("click", function() {
     localStorage.removeItem('recently');
+
+    if($(".recently-searched-itemlist").hasClass("slide-up")) {
+      $(".recently-searched-itemlist").removeClass("slide-up");
+    }
+
+    $(".recently-searched-itemlist").addClass("slide-up");
     $(".recently-searched-itemlist").html("history is cleared! start searching :)");
   });
 
